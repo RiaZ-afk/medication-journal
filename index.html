@@ -1,21 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Medication Research Journal</title>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
+  <title>Medication Journal</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 2em; max-width: 700px; margin: auto; }
-    h1 { color: #4CAF50; }
-    .entry { margin-bottom: 2em; border-bottom: 1px solid #ccc; padding-bottom: 1em; }
-    .date { color: gray; font-size: 0.9em; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 200px;
+      background-color: #111;
+      padding: 20px;
+      box-sizing: border-box;
+      border-right: 1px solid #333;
+    }
+
+    .sidebar h2 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #4CAF50;
+    }
+
+    .sidebar a {
+      display: block;
+      margin-bottom: 10px;
+      text-decoration: none;
+      color: #fff;
+      transition: color 0.3s;
+    }
+
+    .sidebar a:hover {
+      color: #4CAF50;
+    }
+
+    /* Main content */
+    .main-content {
+      flex: 1;
+      padding: 40px;
+    }
+
+    .main-content h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .instructions {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #ccc;
+    }
   </style>
 </head>
 <body>
-  <h1>My Daily Medication Research</h1>
-  <div class="entry">
-    <div class="date">June 19, 2025</div>
-    <h2>Paracetamol (Acetaminophen)</h2>
-    <p>Used for pain and fever. Over-the-counter. Acts on the hypothalamus to reduce fever. Hepatotoxic in high doses.</p>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>Entries</h2>
+    <a href="june-19.html">June 19, 2025</a>
+    <a href="june-20.html">June 20, 2025</a>
+    <!-- Add more links here -->
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h1>Medication Journal</h1>
+    <p class="instructions">
+      Welcome! This is a daily research project where I study one medication each day to build my understanding of pharmacology. 
+      Click a date on the left to view that day's entry.
+    </p>
   </div>
 </body>
 </html>
