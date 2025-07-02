@@ -46,7 +46,12 @@
   },
   {
     "date": "June 30, 2025",
-    "name": "Methylphenidate",
+    "name": "Methyl.",
     "file": "june-30.html"
+  },
+  {
+    "date": "July 2, 2025",
+    "name": "Naproxen",
+    "file": "july-2.html"
   }
 ]
