@@ -88,5 +88,25 @@
     "date": "July 11, 2025",
     "name": "Silymarin",
     "file": "july-11.html"
-  } 
+  },
+  {
+    "date": "July 12, 2025",
+    "name": "Celecoxib",
+    "file": "july-12.html"
+  },
+  {
+    "date": "July 13, 2025",
+    "name": "Buproprion",
+    "file": "july-13.html"
+  },
+  {
+    "date": "July 14, 2025",
+    "name": "Insomnia",
+    "file": "july-14.html"
+  },
+  {
+    "date": "July 15, 2025",
+    "name": "Loratadine",
+    "file": "july-15.html"
+  }
 ]
