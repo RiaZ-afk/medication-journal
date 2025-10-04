@@ -1,294 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Medication Journal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #000;
-      color: #fff;
-      display: flex;
-      min-height: 100vh;
+    :root{
+      --bg:#000; --panel:#111; --text:#fff; --muted:#ccc; --accent:#4CAF50; --border:#333;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:Arial, Helvetica, sans-serif; background:var(--bg); color:var(--text);
+      min-height:100vh; display:flex;
     }
 
-    .sidebar {
-      width: 260px;
-      background-color: #111;
-      padding: 20px;
-      box-sizing: border-box;
-      border-right: 1px solid #333;
+    /* Sidebar */
+    .sidebar{
+      width:280px; background:var(--panel); border-right:1px solid var(--border); padding:20px;
+      position:sticky; top:0; height:100vh; overflow:auto;
+    }
+    .sidebar h2{ margin:0 0 10px; font-size:18px; color:var(--accent); }
+    .sidebar input,.sidebar select{
+      width:100%; padding:8px; margin:0 0 12px; background:#222; color:var(--text); border:1px solid #444; border-radius:6px;
+    }
+    .entry-list a{
+      display:block; padding:8px 6px; border-radius:6px; text-decoration:none; color:var(--text);
+    }
+    .entry-list a:hover{ background:#1a1a1a; color:var(--accent); }
+
+    /* Main */
+    .main{
+      flex:1; padding:40px; max-width:1100px; margin-inline:auto;
+    }
+    h1{ margin:0 0 16px; font-size:28px; }
+    .intro{ color:var(--muted); line-height:1.6; max-width:70ch; }
+
+    /* Visitor Map block */
+    #visitor-map{
+      margin-top:28px; display:flex; justify-content:center; align-items:center;
+    }
+    .map-card{
+      border:1px solid var(--border); border-radius:12px; padding:16px; max-width:360px; width:100%;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
+    }
+    .map-card h3{ margin:0 0 10px; font-size:16px; color:var(--accent); text-align:center; }
+    .map-embed{
+      margin:auto; width:240px; height:240px; display:block;
     }
 
-    .sidebar h2 {
-      font-size: 18px;
-      margin-bottom: 10px;
-      color: #4CAF50;
+    /* Responsive */
+    @media (max-width:900px){
+      body{ flex-direction:column; }
+      .sidebar{ position:relative; height:auto; width:100%; border-right:none; border-bottom:1px solid var(--border); }
+      .main{ padding:24px; }
+      .map-embed{ width:200px; height:200px; }
     }
-
-    .sidebar input,
-    .sidebar select {
-      width: 100%;
-      margin-bottom: 15px;
-      padding: 5px;
-      background-color: #222;
-      color: #fff;
-      border: 1px solid #444;
-    }
-
-    .sidebar a {
-      display: block;
-      margin-bottom: 10px;
-      text-decoration: none;
-      color: #fff;
-      transition: color 0.3s;
-    }
-
-    .sidebar a:hover {
-      color: #4CAF50;
-    }
-
-    .main-content {
-      flex: 1;
-      padding: 40px;
-    }
-
-    .main-content h1 {
-      font-size: 28px;
-      margin-bottom: 20px;
-    }
-
-    .instructions {
-      font-size: 16px;
-      line-height: 1.6;
-      color: #ccc;
+    @media (max-width:480px){
+      .map-embed{ width:160px; height:160px; }
     }
   </style>
 </head>
 <body>
-  <div class="sidebar">
+  <!-- Sidebar -->
+  <aside class="sidebar">
     <h2>Entries</h2>
-    <input type="text" id="search" placeholder="Search..." />
-    <select id="sort-select">
+    <input id="search" type="text" placeholder="Search..." />
+    <select id="sort">
       <option value="date">Sort by Date</option>
       <option value="name">Sort by Medication Name</option>
     </select>
-    <div id="entry-list"></div>
-  </div>
+    <div id="list" class="entry-list"></div>
+  </aside>
 
-  <div class="main-content">
+  <!-- Main content -->
+  <main class="main">
     <h1>Medication Journal</h1>
-    <p class="instructions">
-      Welcome! This is a daily project where I research a new medication each day.
-      Use the sidebar to find entries by date or name, or search for a specific medication.
+    <p class="intro">
+      Welcome! I research one medication each day and summarize the key points—uses, side effects, how it works, and an interesting fact.
+      Browse entries on the left, use search/sort, and check out where visitors come from on the map below.
     </p>
-  </div>
 
+    <!-- Visitor Map -->
+    <section id="visitor-map" aria-label="Visitor locations">
+      <div class="map-card">
+        <h3>Visitors Around the World</h3>
+        <!-- Globe widget (3D). To use the flat map instead, replace globe.js with map_v2.js (see comment below). -->
+        <div class="map-embed">
+          <script
+            type="text/javascript"
+            id="clustrmaps"
+            src="https://clustrmaps.com/globe.js?d=1jIiMfl6RvS_QjDfFU3hKEECz3xZYHWJbs_1_LUDXHY">
+          </script>
+        </div>
+
+        <!--
+          Prefer a flat 2D map? Swap the script above for this one:
+          <script type="text/javascript" id="clustrmaps" src="https://clustrmaps.com/map_v2.js?d=1jIiMfl6RvS_QjDfFU3hKEECz3xZYHWJbs_1_LUDXHY&cl=ffffff&w=a"></script>
+        -->
+      </div>
+    </section>
+  </main>
+
+  <!-- App logic -->
   <script>
-    let allEntries = [];
+    const listEl = document.getElementById('list');
+    const sortEl = document.getElementById('sort');
+    const searchEl = document.getElementById('search');
+    let entries = [];
 
-    const listContainer = document.getElementById('entry-list');
-    const sortSelect = document.getElementById('sort-select');
-    const searchInput = document.getElementById('search');
-
-    // Load data.json
+    // Load entries
     fetch('data.json')
-      .then(response => response.json())
-      .then(data => {
-        allEntries = data;
-        renderList();
-      });
+      .then(r => r.json())
+      .then(data => { entries = data; render(); })
+      .catch(() => { listEl.innerHTML = '<div style="color:#f66">Could not load data.json</div>'; });
 
-    function renderList() {
-      let filtered = [...allEntries];
+    function render(){
+      const q = (searchEl.value || '').toLowerCase();
+      let rows = entries.filter(e =>
+        e.name.toLowerCase().includes(q) || e.date.toLowerCase().includes(q)
+      );
 
-      // Filter by search
-      const searchTerm = searchInput.value.toLowerCase();
-      if (searchTerm) {
-        filtered = filtered.filter(entry =>
-          entry.name.toLowerCase().includes(searchTerm) ||
-          entry.date.toLowerCase().includes(searchTerm)
-        );
-      }
-
-      // Sort
-      if (sortSelect.value === 'name') {
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
+      if (sortEl.value === 'name') {
+        rows.sort((a,b) => a.name.localeCompare(b.name));
       } else {
-        // Optional: reverse to show most recent first
-        filtered.reverse();
+        // Assume data.json is chronological (oldest->newest); reverse to show most recent first
+        rows = rows.slice().reverse();
       }
 
-      // Render
-      listContainer.innerHTML = '';
-      filtered.forEach(entry => {
+      listEl.innerHTML = '';
+      rows.forEach(e => {
         const a = document.createElement('a');
-        a.href = entry.file;
-        a.textContent = `${entry.date} – ${entry.name}`;
-        listContainer.appendChild(a);
+        a.href = e.file;
+        a.textContent = `${e.date} – ${e.name}`;
+        listEl.appendChild(a);
       });
     }
 
-    // Event Listeners
-    sortSelect.addEventListener('change', renderList);
-    searchInput.addEventListener('input', renderList);
-  </script>
-<div style="position: fixed; bottom: 20px; right: 20px; width: 160px; height: 160px; z-index: 999;">
-  <script type="text/javascript" id="clustrmaps" src="https://clustrmaps.com/globe.js?d=1jIiMfl6RvS_QjDfFU3hKEECz3xZYHWJbs_1_LUDXHY"></script>
-</div>
-
-<!--<script type="text/javascript" id="clstr_globe" src="//clustrmaps.com/globe.js?d=1jIiMfl6RvS_QjDfFU3hKEECz3xZYHWJbs_1_LUDXHY"></script> -->
-</body>
-</html>
-
-
-<!--<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Medication Journal</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #000;
-      color: #fff;
-      display: flex;
-      min-height: 100vh;
-    }
-
-    .sidebar {
-      width: 260px;
-      background-color: #111;
-      padding: 20px;
-      box-sizing: border-box;
-      border-right: 1px solid #333;
-    }
-
-    .sidebar h2 {
-      font-size: 18px;
-      margin-bottom: 10px;
-      color: #4CAF50;
-    }
-
-    .sidebar input,
-    .sidebar select {
-      width: 100%;
-      margin-bottom: 15px;
-      padding: 5px;
-      background-color: #222;
-      color: #fff;
-      border: 1px solid #444;
-    }
-
-    .sidebar a {
-      display: block;
-      margin-bottom: 10px;
-      text-decoration: none;
-      color: #fff;
-      transition: color 0.3s;
-    }
-
-    .sidebar a:hover {
-      color: #4CAF50;
-    }
-
-    .main-content {
-      flex: 1;
-      padding: 40px;
-    }
-
-    .main-content h1 {
-      font-size: 28px;
-      margin-bottom: 20px;
-    }
-
-    .instructions {
-      font-size: 16px;
-      line-height: 1.6;
-      color: #ccc;
-    }
-
-    #visitor-map {
-      text-align: center;
-      margin-top: 40px;
-    }
-  </style>
-</head>
-<body>
-  <div class="sidebar">
-    <h2>Entries</h2>
-    <input type="text" id="search" placeholder="Search..." />
-    <select id="sort-select">
-      <option value="date">Sort by Date</option>
-      <option value="name">Sort by Medication Name</option>
-    </select>
-    <div id="entry-list"></div>
-  </div>
-
-  <div class="main-content">
-    <h1>Medication Journal</h1>
-    <p class="instructions">
-      Welcome! This is a daily project where I research a new medication each day.
-      Use the sidebar to find entries by date or name, or search for a specific medication.
-    </p>
-  </div>
-    <!--
-    <div id="visitor-map">
-      <script type="text/javascript" id="clustrmaps" src="https://clustrmaps.com/globe.js?d=1jIiMfl6RvS_QjDfFU3hKEECz3xZYHWJbs_1_LUDXHY"></script>
-    </div>
-    
-  <div id="visitor-map" style="margin-top: 40px; text-align: center;">
-    <script type="text/javascript" id="clustrmaps" src="https://clustrmaps.com/map_v2.js?d=1jIiMfl6RvS_QjDfFU3hKEECz3xZYHWJbs_1_LUDXHY&cl=ffffff&w=a"></script>
-  </div>
-  <div style="position: fixed; bottom: 20px; right: 20px; width: 160px; height: 160px; z-index: 999;">
-  <script type="text/javascript" id="clustrmaps" src="https://clustrmaps.com/map_v2.js?d=1jIiMfl6RvS_QjDfFU3hKEECz3xZYHWJbs_1_LUDXHY&cl=ffffff&w=a"></script>
-</div>
-  <script>
-    let allEntries = [];
-
-    const listContainer = document.getElementById('entry-list');
-    const sortSelect = document.getElementById('sort-select');
-    const searchInput = document.getElementById('search');
-
-    fetch('data.json')
-      .then(response => response.json())
-      .then(data => {
-        allEntries = data;
-        renderList();
-      });
-
-    function renderList() {
-      let filtered = [...allEntries];
-      const searchTerm = searchInput.value.toLowerCase();
-
-      if (searchTerm) {
-        filtered = filtered.filter(entry =>
-          entry.name.toLowerCase().includes(searchTerm) ||
-          entry.date.toLowerCase().includes(searchTerm)
-        );
-      }
-
-      if (sortSelect.value === 'name') {
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
-      } else {
-        filtered.reverse();
-      }
-
-      listContainer.innerHTML = '';
-      filtered.forEach(entry => {
-        const a = document.createElement('a');
-        a.href = entry.file;
-        a.textContent = `${entry.date} – ${entry.name}`;
-        listContainer.appendChild(a);
-      });
-    }
-
-    sortSelect.addEventListener('change', renderList);
-    searchInput.addEventListener('input', renderList);
+    sortEl.addEventListener('change', render);
+    searchEl.addEventListener('input', render);
   </script>
 </body>
 </html>
-
--->
