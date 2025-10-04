@@ -24,6 +24,7 @@
   "name": "Paracetamol",
   "file": "june-24.html"
   },
+  
   {
     "date": "June 25, 2025",
     "name": "Albuterol",
@@ -138,5 +139,10 @@
     "date": "July 25, 2025",
     "name": "Cetirizine",
     "file": "july-25.html"
+  },
+  {
+    "date": "October 4, 2025",
+    "name": "Atorvastatin",
+    "file": "october-4.html"
   }
 ]
