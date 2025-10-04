@@ -16,8 +16,14 @@
 
     /* Sidebar */
     .sidebar{
-      width:280px; background:var(--panel); border-right:1px solid var(--border); padding:20px;
+      width:340px; background:var(--panel); border-right:1px solid var(--border); padding:20px;
       position:sticky; top:0; height:100vh; overflow:auto;
+      /* hide white scrollbar */
+      scrollbar-width: none;               /* Firefox */
+    }
+    .sidebar::-webkit-scrollbar{           /* Chrome/Edge/Safari */
+      width:0 !important;
+      height:0 !important;
     }
     .sidebar h2{ margin:0 0 10px; font-size:18px; color:var(--accent); }
     .sidebar input,.sidebar select{
@@ -45,7 +51,7 @@
     }
     .map-card h3{ margin:0 0 10px; font-size:16px; color:var(--accent); text-align:center; }
     .map-embed{
-      margin:auto; width:240px; height:240px; display:block;
+      margin:auto; width:100%; max-width:560px; display:block;
     }
 
     /* Responsive */
@@ -53,10 +59,10 @@
       body{ flex-direction:column; }
       .sidebar{ position:relative; height:auto; width:100%; border-right:none; border-bottom:1px solid var(--border); }
       .main{ padding:24px; }
-      .map-embed{ width:200px; height:200px; }
+      .map-embed{ width:100%; max-width:560px; }
     }
     @media (max-width:480px){
-      .map-embed{ width:160px; height:160px; }
+      .map-embed{ width:100%; max-width:560px; }
     }
   </style>
 </head>
@@ -76,27 +82,21 @@
   <main class="main">
     <h1>Medication Journal</h1>
     <p class="intro">
-      Welcome! I research one medication each day and summarize the key points—uses, side effects, how it works, and an interesting fact.
-      Browse entries on the left, use search/sort, and check out where visitors come from on the map below.
+      Welcome! This is a daily project where I research a new medication each day.
+      Use the sidebar to find entries by date or name, or search for a specific medication.
     </p>
 
     <!-- Visitor Map -->
     <section id="visitor-map" aria-label="Visitor locations">
       <div class="map-card">
         <h3>Visitors Around the World</h3>
-        <!-- Globe widget (3D). To use the flat map instead, replace globe.js with map_v2.js (see comment below). -->
         <div class="map-embed">
           <script
             type="text/javascript"
             id="clustrmaps"
-            src="https://clustrmaps.com/globe.js?d=1jIiMfl6RvS_QjDfFU3hKEECz3xZYHWJbs_1_LUDXHY">
+            src="https://clustrmaps.com/map_v2.js?d=1jIiMfl6RvS_QjDfFU3hKEECz3xZYHWJbs_1_LUDXHY&cl=ffffff&w=a">
           </script>
         </div>
-
-        <!--
-          Prefer a flat 2D map? Swap the script above for this one:
-          <script type="text/javascript" id="clustrmaps" src="https://clustrmaps.com/map_v2.js?d=1jIiMfl6RvS_QjDfFU3hKEECz3xZYHWJbs_1_LUDXHY&cl=ffffff&w=a"></script>
-        -->
       </div>
     </section>
   </main>
