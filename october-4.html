@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>October 4 – Atorvastatin</title>
+  <title>October 5 – ExampleDrug</title>
   <style>
     body {
       background-color: #000;
@@ -30,29 +30,74 @@
     .back {
       display: inline-block;
       margin-bottom: 20px;
-      color: #4CAF50;I
+      color: #4CAF50;
       text-decoration: none;
     }
 
     .back:hover {
       text-decoration: underline;
     }
+
+    /* Speaker button in title */
+    .speak-title{
+      background: transparent;
+      border: none;
+      color: #4CAF50;          /* match the h1 green */
+      padding: 0;
+      margin-right: 10px;
+      cursor: pointer;
+      line-height: 1;
+      vertical-align: middle;
+    }
+    .speak-title:hover { opacity: 0.85; }
+    .speak-title:focus { outline: 2px solid #4CAF50; outline-offset: 3px; border-radius: 6px; }
   </style>
 </head>
 <body>
   <a href="index.html" class="back">← Back to Journal</a>
 
-  <h1>Atorvastatin</h1>
+  <!-- Title with speaker button -->
+  <h1>
+    <button class="speak-title" data-phrase="ExampleDrug" aria-label="Pronounce ExampleDrug" title="Pronounce">
+      <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M3 10v4h4l5 5V5L7 10H3zm13.5 2a3.5 3.5 0 0 0-2-3.16v6.32A3.5 3.5 0 0 0 16.5 12zm-2-8.03v2.09a6.5 6.5 0 0 1 0 11.88v2.09c3.35-1.04 5.75-4.18 5.75-7.96s-2.4-6.92-5.75-7.96z"/>
+      </svg>
+    </button>
+    Atorvastatin
+  </h1>
+
   <div class="section"><strong>Chemical Formula:</strong></strong> <p>C<sub>33</sub>H<sub>35</sub>FN<sub>2</sub>O<sub>5</sub></p> </div>
   <div class="section"><strong>Uses:</strong> High cholesterol</div>
   <div class="section"><strong>How it Works:</strong> It blocks the HMG-CoA reductase, which is an enzyme that creates cholesterol. When cholesterol production goes down, the liver pulls out more LDLs (bad cholesterol) out of the bloodstream.</div>
   <div class="section"><strong>Side Effects:</strong> Headache, diarrhea, upset stomach</div>
   <div class="section"><strong>Interesting Fact:</strong> Atorvastatin is one of the best-selling drugs ever.</div>
 
-  <!-- Picture Section -->
-  <div class="section">
+    <div class="section">
     <strong>Picture:</strong><br>
     <img src="images/atorvastatin.png" alt="Picture of atorvastatin" style="max-width:100%; border-radius:8px; margin-top:8px;">
   </div>
+</body>
+</html>
+
+
+  <script>
+    // One handler for any title speaker buttons
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.speak-title');
+      if (!btn) return;
+
+      const phrase = btn.dataset.phrase || btn.nextSibling?.textContent?.trim() || '';
+      if (!('speechSynthesis' in window)) {
+        alert('Speech not supported in this browser.');
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(phrase);
+      u.lang = 'en-US';   // tweak if needed
+      u.rate = 1.0;
+      u.pitch = 1.0;
+      speechSynthesis.speak(u);
+    });
+  </script>
 </body>
 </html>
