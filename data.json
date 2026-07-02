@@ -192,7 +192,12 @@
   },
   {
     "date": "June 20, 2026",
-    "name": "Fluocinonide"
+    "name": "Fluocinonide",
     "file": "june-20-2026.html"
+  },
+  {
+    "date": "July 2, 2026",
+    "name": "Rapamycin",
+    "july-2-2026.html"
   }
 ]
